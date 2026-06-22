@@ -47,6 +47,33 @@ window.addEventListener('scroll',()=>{
   document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60);
 });
 
+// ─── MOBILE NAVBAR MENU ────────────────
+const hamburger = document.getElementById('nav-hamburger');
+const navLinks = document.getElementById('nav-links');
+if (hamburger && navLinks) {
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navLinks.classList.toggle('active');
+  });
+
+  // Close menu when clicking a link
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('active');
+      navLinks.classList.remove('active');
+    });
+  });
+
+  // Close menu when clicking the mobile Hire Me button
+  const mobileCta = navLinks.querySelector('.mobile-only-inline');
+  if (mobileCta) {
+    mobileCta.addEventListener('click', () => {
+      hamburger.classList.remove('active');
+      navLinks.classList.remove('active');
+    });
+  }
+}
+
 // ─── TILT CARDS ───────────────────────
 document.querySelectorAll('[data-tilt]').forEach(el=>{
   el.addEventListener('mousemove',e=>{
@@ -202,7 +229,7 @@ if (termToggle && termWindow) {
         break;
       case 'about':
         printLine('Lishanth V — Flutter & AI Developer', 'cmd-header');
-        printLine('  Final-year CSE student at Muthayammal Engineering College (2023–2027).');
+        printLine('  Final-year CSE student at Muthayammal Engineering College (Autonomous) (2023–2027).');
         printLine('  Crafts high-performance cross-platform applications and AI integration tools.');
         printLine('  Passionate about prompt engineering, LLMs, and modular clean architecture.');
         break;
@@ -247,7 +274,7 @@ if (termToggle && termWindow) {
           printLine('  Experienced with building RESTful services using Python, FastAPI, relational databases (PostgreSQL, MySQL), and deploying digital services.');
         } else if (cleanCmd.includes('college') || cleanCmd.includes('education') || cleanCmd.includes('cse') || cleanCmd.includes('muthayammal')) {
           printLine('Education Background:', 'cmd-header');
-          printLine('  Final-year B.E. Computer Science & Engineering student at Muthayammal Engineering College (Anna University) with a strong academic background.');
+          printLine('  Final-year B.E. Computer Science & Engineering student at Muthayammal Engineering College (Autonomous), affiliated with Anna University, with a strong academic background.');
         } else {
           printLine(`Command not found: "${cmd}". Type "help" for a list of valid commands.`, 'cmd-error');
         }
