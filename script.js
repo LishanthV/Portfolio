@@ -131,3 +131,139 @@ if (contactForm) {
     window.location.href = `mailto:lishanth@email.com?subject=${subject}&body=${body}`;
   });
 }
+
+// ─── TERMINAL CONSOLE ─────────────────
+const termToggle = document.getElementById('terminal-toggle');
+const termWindow = document.getElementById('terminal-window');
+const termMinimize = document.getElementById('terminal-minimize');
+const termClose = document.getElementById('terminal-close');
+const termInput = document.getElementById('terminal-input');
+const termOutput = document.getElementById('terminal-output');
+const termChips = document.querySelectorAll('.cmd-chip');
+
+if (termToggle && termWindow) {
+  // Toggle terminal
+  termToggle.addEventListener('click', () => {
+    termWindow.classList.toggle('active');
+    if (termWindow.classList.contains('active')) {
+      termInput.focus();
+    }
+  });
+
+  // Minimize terminal
+  if (termMinimize) {
+    termMinimize.addEventListener('click', () => {
+      termWindow.classList.remove('active');
+    });
+  }
+
+  // Close terminal
+  if (termClose) {
+    termClose.addEventListener('click', () => {
+      termWindow.classList.remove('active');
+    });
+  }
+
+  // Quick chips
+  termChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const cmd = chip.dataset.cmd;
+      runCommand(cmd);
+    });
+  });
+
+  // Input keypress
+  termInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const cmd = termInput.value.trim();
+      termInput.value = '';
+      if (cmd) {
+        runCommand(cmd);
+      }
+    }
+  });
+
+  // Command logic
+  function runCommand(cmd) {
+    // Print input line
+    printLine(`guest@lk-dev:~$ ${cmd}`, 'cmd-input');
+    
+    const cleanCmd = cmd.toLowerCase().trim();
+    
+    switch (cleanCmd) {
+      case 'help':
+        printLine('Available Commands:', 'cmd-header');
+        printLine('  about    - Print brief biography');
+        printLine('  skills   - List technical skills checklist');
+        printLine('  projects - Display details of featured projects');
+        printLine('  contact  - Output connection details & email info');
+        printLine('  hire     - Scroll to hire form section');
+        printLine('  clear    - Clear console screen buffer');
+        break;
+      case 'about':
+        printLine('Lishanth V — Flutter & AI Developer', 'cmd-header');
+        printLine('  Final-year CSE student at Muthayammal Engineering College (2023–2027).');
+        printLine('  Crafts high-performance cross-platform applications and AI integration tools.');
+        printLine('  Passionate about prompt engineering, LLMs, and modular clean architecture.');
+        break;
+      case 'skills':
+        printLine('Core Tech Stack:', 'cmd-header');
+        printLine('  [■■■■■■■■■□] Flutter / Dart (Mobile/Web)');
+        printLine('  [■■■■■■■■□□] TypeScript / JavaScript / Node.js');
+        printLine('  [■■■■■■■■□□] AI (Anthropic Claude SDK & Gemini API)');
+        printLine('  [■■■■■■■□□□] Backend (Python FastAPI & MySQL/PostgreSQL)');
+        break;
+      case 'projects':
+        printLine('Featured Projects:', 'cmd-header');
+        printLine('  1. Book — AI Reading Companion (Flutter/Hive/Claude)');
+        printLine('  2. AutoLeet — LeetCode AI CLI & Dashboard (Node/TS/Claude)');
+        printLine('  3. E-Governance Web App (FastAPI/MySQL/PostgreSQL)');
+        printLine('  4. 3D Web Portfolio (Vanilla HTML5/CSS3/Canvas)');
+        break;
+      case 'contact':
+        printLine('Connect with Lishanth:', 'cmd-header');
+        printLine('  Email    : lishanth@email.com');
+        printLine('  LinkedIn : https://linkedin.com');
+        printLine('  GitHub   : https://github.com');
+        break;
+      case 'hire':
+        printLine('Scrolling to the Contact Form...', 'system-msg');
+        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => termWindow.classList.remove('active'), 800);
+        break;
+      case 'clear':
+        termOutput.innerHTML = '';
+        break;
+      default:
+        // Try keyword matching
+        if (cleanCmd.includes('flutter') || cleanCmd.includes('dart') || cleanCmd.includes('mobile')) {
+          printLine('Mobile Development:', 'cmd-header');
+          printLine('  Lishanth is a highly skilled Flutter developer, creating cross-platform apps using modern state management (Riverpod), local storage (Hive/SQLite), and native platform integrations.');
+        } else if (cleanCmd.includes('ai') || cleanCmd.includes('claude') || cleanCmd.includes('gemini') || cleanCmd.includes('llm')) {
+          printLine('AI Integration:', 'cmd-header');
+          printLine('  Specializes in embedding large language models into apps. Built custom CLI tools and dashboard frameworks using Anthropic Claude SDK, Google Gemini API, and custom prompt templates.');
+        } else if (cleanCmd.includes('python') || cleanCmd.includes('backend') || cleanCmd.includes('fastapi')) {
+          printLine('Backend Development:', 'cmd-header');
+          printLine('  Experienced with building RESTful services using Python, FastAPI, relational databases (PostgreSQL, MySQL), and deploying digital services.');
+        } else if (cleanCmd.includes('college') || cleanCmd.includes('education') || cleanCmd.includes('cse') || cleanCmd.includes('muthayammal')) {
+          printLine('Education Background:', 'cmd-header');
+          printLine('  Final-year B.E. Computer Science & Engineering student at Muthayammal Engineering College (Anna University) with a strong academic background.');
+        } else {
+          printLine(`Command not found: "${cmd}". Type "help" for a list of valid commands.`, 'cmd-error');
+        }
+    }
+    
+    // Auto scroll to bottom
+    const body = document.getElementById('terminal-body');
+    if (body) {
+      body.scrollTop = body.scrollHeight;
+    }
+  }
+
+  function printLine(text, className = 'cmd-output') {
+    const line = document.createElement('div');
+    line.className = `output-line ${className}`;
+    line.textContent = text;
+    termOutput.appendChild(line);
+  }
+}
