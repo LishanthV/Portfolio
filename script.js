@@ -143,20 +143,67 @@ document.querySelectorAll('.pchip').forEach(chip=>{
   });
 });
 
-// ─── CONTACT FORM GMAIL ───────────────
+// ─── CONTACT FORM AJAX (FORMSUBMIT) ────
 const contactForm = document.getElementById('contact-form');
-if (contactForm) {
+const contactSubmit = document.getElementById('contact-submit');
+if (contactForm && contactSubmit) {
   contactForm.addEventListener('submit', e => {
     e.preventDefault();
+    
     const name = document.getElementById('contact-name').value;
     const email = document.getElementById('contact-email').value;
     const message = document.getElementById('contact-message').value;
     
-    const subject = encodeURIComponent(`Portfolio Message from ${name}`);
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+    // Save original button state
+    const originalText = contactSubmit.innerHTML;
+    contactSubmit.disabled = true;
+    contactSubmit.innerHTML = 'Sending... ⏳';
     
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=lishanth2192005@gmail.com&su=${subject}&body=${body}`;
-    window.open(gmailUrl, '_blank');
+    fetch('https://formsubmit.co/ajax/lishanth2192005@gmail.com', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        message: message
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Server error');
+      }
+    })
+    .then(data => {
+      contactSubmit.innerHTML = 'Message Sent! ✓';
+      contactSubmit.style.background = '#22c55e'; // Turn green on success
+      contactSubmit.style.color = '#fff';
+      contactForm.reset();
+      
+      setTimeout(() => {
+        contactSubmit.disabled = false;
+        contactSubmit.innerHTML = originalText;
+        contactSubmit.style.background = '';
+        contactSubmit.style.color = '';
+      }, 3000);
+    })
+    .catch(error => {
+      console.error(error);
+      contactSubmit.innerHTML = 'Failed to Send ✗';
+      contactSubmit.style.background = 'var(--coral)'; // Turn coral/red on failure
+      contactSubmit.style.color = '#fff';
+      
+      setTimeout(() => {
+        contactSubmit.disabled = false;
+        contactSubmit.innerHTML = originalText;
+        contactSubmit.style.background = '';
+        contactSubmit.style.color = '';
+      }, 3000);
+    });
   });
 }
 
