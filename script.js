@@ -143,7 +143,7 @@ document.querySelectorAll('.pchip').forEach(chip=>{
   });
 });
 
-// ─── CONTACT FORM MAILTO ──────────────
+// ─── CONTACT FORM GMAIL ───────────────
 const contactForm = document.getElementById('contact-form');
 if (contactForm) {
   contactForm.addEventListener('submit', e => {
@@ -155,7 +155,8 @@ if (contactForm) {
     const subject = encodeURIComponent(`Portfolio Message from ${name}`);
     const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
     
-    window.location.href = `mailto:lishanth@email.com?subject=${subject}&body=${body}`;
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=lishanth2192005@gmail.com&su=${subject}&body=${body}`;
+    window.open(gmailUrl, '_blank');
   });
 }
 
@@ -249,7 +250,7 @@ if (termToggle && termWindow) {
         break;
       case 'contact':
         printLine('Connect with Lishanth:', 'cmd-header');
-        printLine('  Email    : lishanth@email.com');
+        printLine('  Email    : lishanth2192005@gmail.com');
         printLine('  LinkedIn : https://linkedin.com');
         printLine('  GitHub   : https://github.com');
         break;
